@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  snyk: snyk/snyk@0.0.8
+  snyk: snyk/snyk@0.0.13
 
 jobs:
     build:
@@ -9,7 +9,7 @@ jobs:
           - image: circleci/node:4.8.2
         steps:
           - checkout
-          - run: npm install
+          - run: npm install -q
           - snyk/scan:
               fail-on-issues: false
               monitor-on-build: false
