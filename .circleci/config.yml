@@ -10,7 +10,8 @@ jobs:
           - image: circleci/node:4.8.2
         steps:
           - checkout
-          - run: mvn install 
+          - run: apt-get update
+          - run: apt-get get install maven 
           - snyk/scan:
               fail-on-issues: false
               monitor-on-build: false
