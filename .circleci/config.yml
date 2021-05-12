@@ -11,7 +11,7 @@ jobs: # a collection of steps
           command: 'sudo npm install -g npm@latest'
       - run:
           name: install mvn
-          command: 'sudo mvn clean install'
+          command: 'sudo apt-get install maven'
       - run:
           name: install-snyk
           command: 'sudo npm install -g snyk'   
