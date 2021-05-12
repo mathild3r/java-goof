@@ -6,16 +6,16 @@ orbs:
 jobs:
     build:
         docker:
-        - image: circleci/node:4.8.2
+          - image: circleci/node:4.8.2
         steps:
-        - checkout
-        - run: npm install -q
-        - snyk/scan:
-            fail-on-issues: false
-            monitor-on-build: false
-            token-variable: SNYK_TOKEN
-            additional-arguments: --json-file-output=snykTestResults.json
-        - run: npx snyk-prevent-gh-commit-status ./snykTestResults.json ${GITHUB_TOKEN} ${CIRCLE_PROJECT_USERNAME} ${CIRCLE_PROJECT_REPONAME} ${CIRCLE_SHA1} ${CIRCLE_PULL_REQUEST} ${CIRCLE_BUILD_URL}
+          - checkout
+          - run: npm install
+          - snyk/scan:
+              fail-on-issues: false
+              monitor-on-build: false
+              token-variable: SNYK_TOKEN
+              additional-arguments: --json-file-output=snykTestResults.json
+          - run: npx snyk-prevent-gh-commit-status ./snykTestResults.json ${GITHUB_TOKEN} ${CIRCLE_PROJECT_USERNAME} ${CIRCLE_PROJECT_REPONAME} ${CIRCLE_SHA1} ${CIRCLE_PULL_REQUEST} ${CIRCLE_BUILD_URL}
 
 workflows:
   version: 2.1
