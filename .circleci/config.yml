@@ -4,46 +4,24 @@ orbs:
 snyk: snyk/snyk@0.0.8
 
 jobs:
-build:
-    docker:
-    - image: circleci/node:4.8.2
-    steps:
-    - checkout
-    - run: npm install -q
-    - snyk/scan:
-        fail-on-issues: false
-        monitor-on-build: false
-        token-variable: SNYK_TOKEN
-        additional-arguments: --json-file-output=snykTestResults.json
-    - run: npx snyk-prevent-gh-commit-status ./snykTestResults.json ${GITHUB_TOKEN} ${CIRCLE_PROJECT_USERNAME} ${CIRCLE_PROJECT_REPONAME} ${CIRCLE_SHA1} ${CIRCLE_PULL_REQUEST} ${CIRCLE_BUILD_URL}
+
+    build:
+        docker:
+        - image: circleci/node:4.8.2
+        steps:
+        - checkout
+        - run: npm install -q
+        - snyk/scan:
+            fail-on-issues: false
+            monitor-on-build: false
+            token-variable: SNYK_TOKEN
+            additional-arguments: --json-file-output=snykTestResults.json
+        - run: npx snyk-prevent-gh-commit-status ./snykTestResults.json ${GITHUB_TOKEN} ${CIRCLE_PROJECT_USERNAME} ${CIRCLE_PROJECT_REPONAME} ${CIRCLE_SHA1} ${CIRCLE_PULL_REQUEST} ${CIRCLE_BUILD_URL}
 
 workflows:
   version: 2.1
-  nightly:
-    triggers:
-      - schedule:
-          cron: "0 0 * * *"
-          filters:
-            branches:
-              only:
-                - master
-    jobs:
-      - build-test-monitor
-  build-test-monitor-publish:
-    jobs:
-      - build-test-monitor:
-          filters:
-            branches:
-              only:
-                  - master
-      - publish-github-release:
-          requires:
-            - build-test-monitor
-          filters:
-            branches:
-              only:
-                - master
-  build-test:
+  
+  build:
       jobs:
         - build-test:
             filters:
