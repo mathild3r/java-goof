@@ -5,6 +5,7 @@ orbs:
 
 jobs:
     build:
+        working_directory: ~/java_goof
         docker:
           - image: circleci/node:4.8.2
         steps:
