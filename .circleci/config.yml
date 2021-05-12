@@ -23,14 +23,10 @@ workflows:
   
   build:
       jobs:
-        - build-test:
+        - build:
             filters:
               branches:
                 ignore:
                   - master
                   - /pull\/[0-9]+/
-        - build-test-from-fork:
-            filters:
-              branches:
-                only:
-                  - /pull\/[0-9]+/
+        
