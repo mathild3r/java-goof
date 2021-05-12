@@ -12,7 +12,6 @@ jobs:
           - checkout
           - run: sudo apt-get update
           - run: sudo apt-get install maven
-          - run: sudo apt-get install -y npm
           - run: sudo npm install -g npm@latest
           - run: sudo npm i -g snyk-prevent-gh-commit-status 
           - snyk/scan:
