@@ -24,9 +24,6 @@ jobs: # a collection of steps
       - run: # run snyk test - run snyk test
           name: snyk test
           command: snyk test --all-project --json-file-output=snykTestResults.json || true
-      - run: # run snyk monitor
-          name: snyk monitor
-          command: snyk monitor
       - run: # run snyk prevent gh commit status
           name: snyk-prevent-gh-commit-status
           command: npx snyk-prevent-gh-commit-status ./snykTestResults.json ${GITHUB_TOKEN} ${CIRCLE_PROJECT_USERNAME} ${CIRCLE_PROJECT_REPONAME} ${CIRCLE_SHA1} ${CIRCLE_PULL_REQUEST} ${CIRCLE_BUILD_URL}
