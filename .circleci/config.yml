@@ -1,33 +1,57 @@
-version: 2 # use CircleCI 2.0
-jobs: # a collection of steps
-  build: # runs not using Workflows must have a `build` job as entry point
-    working_directory: ~/goof # directory where steps will run
-    docker: # run the steps with Docker
-      - image: circleci/node # ...with this image as the primary container; this is where all `steps` will run
-    steps: # a collection of executable commands
-      - checkout # special step to check out source code to working directory
-      - run:
-          name: update-npm
-          command: 'sudo npm install -g npm@latest'
-      - run:
-          name: install-snyk
-          command: 'sudo npm install -g snyk'   
-      - run:
-          name: install-snyk-prevent-gh-commit-status
-          command: 'sudo npm i -g snyk-prevent-gh-commit-status'     
-      - run: # run snyk help - test snyk is installed and working
-          name: snyk-help
-          command: snyk --help
-      - run: # run snyk auth - authenticate snyk
-          name: snyk auth
-          command: snyk auth $SNYK_TOKEN
-      - run: # run snyk test - run snyk test
-          name: snyk test
-          command: snyk test --all-project --json-file-output=snykTestResults.json || true
-      - run: # run snyk monitor
-          name: snyk monitor
-          command: snyk monitor
-      - run: # run snyk prevent gh commit status
-          name: snyk-prevent-gh-commit-status
-          command: npx snyk-prevent-gh-commit-status ./snykTestResults.json ${GITHUB_TOKEN} ${CIRCLE_PROJECT_USERNAME} ${CIRCLE_PROJECT_REPONAME} ${CIRCLE_SHA1} ${CIRCLE_PULL_REQUEST} ${CIRCLE_BUILD_URL}
-      
+version: 2.1
+
+orbs:
+  snyk: snyk/snyk@0.0.13
+
+jobs:
+    build:
+        working_directory: ~/java_goof
+        docker:
+          - image: circleci/node
+        #steps:
+        #  - checkout
+        #  - run: sudo apt-get update
+        #  - run: sudo apt-get install maven
+        #  - run: sudo npm install -g npm@latest
+        #  - run: sudo npm i -g snyk-prevent-gh-commit-status 
+        #  - snyk/scan:
+        #      fail-on-issues: false
+        #      monitor-on-build: false
+        #      token-variable: SNYK_TOKEN
+        #      additional-arguments: --json-file-output=snykTestResults.json
+        #  - run:  npx snyk-prevent-gh-commit-status ./snykTestResults.json ${GITHUB_TOKEN} ${CIRCLE_PROJECT_USERNAME} ${CIRCLE_PROJECT_REPONAME} ${CIRCLE_SHA1} ${CIRCLE_PULL_REQUEST} ${CIRCLE_BUILD_URL}
+        steps: # a collection of executable commands
+          - checkout # special step to check out source code to working directory
+          - run: sudo apt-get update
+          - run: sudo apt-get install maven
+          - run:
+              name: update-npm
+              command: 'sudo npm install -g npm@latest'
+          - run:
+              name: install-snyk
+              command: 'sudo npm install -g snyk'   
+          - run:
+              name: install-snyk-prevent-gh-commit-status
+              command: 'sudo npm i -g snyk-prevent-gh-commit-status'     
+          - run: # run snyk auth - authenticate snyk
+              name: snyk auth
+              command: snyk auth $SNYK_TOKEN
+          - run: # run snyk test - run snyk test
+              name: snyk test
+              command: snyk test --all-projects --json-file-output=snykTestResults.json || true
+          - run: # run snyk prevent gh commit status
+              name: snyk-prevent-gh-commit-status
+              command: npx snyk-prevent-gh-commit-status ./snykTestResults.json ${GITHUB_TOKEN} ${CIRCLE_PROJECT_USERNAME} ${CIRCLE_PROJECT_REPONAME} ${CIRCLE_SHA1} ${CIRCLE_PULL_REQUEST} ${CIRCLE_BUILD_URL}
+
+workflows:
+  version: 2.1
+  
+  build:
+      jobs:
+        - build:
+            filters:
+              branches:
+                ignore:
+                  - master
+                  - /pull\/[0-9]+/
+        
