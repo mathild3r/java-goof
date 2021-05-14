@@ -1,0 +1,61 @@
+properties([pipelineTriggers([githubPush()])])
+
+pipeline {
+    agent any
+
+    tools {
+        maven 'maven' // Refers to a global tool configuration for Maven called 'maven-3.6.0'
+    }
+
+    environment {
+        SNYK_TOKEN = credentials('SNYK_TOKEN')
+        GITHUB_TOKEN = credentials('GITHUB_TOKEN')
+    }
+
+    stages {
+
+      stage('Initialize & Cleanup Workspace') {
+                  steps {
+                    echo 'Initialize & Cleanup Workspace'
+                    sh 'ls -la'
+                    sh 'rm -rf *'
+                    sh 'rm -rf .git'
+                    sh 'rm -rf .gitignore'
+                    sh 'ls -la'
+                  }
+              }
+      stage('Checkout SCM') {
+              steps {
+                checkout([
+                  $class: 'GitSCM',
+                  branches: [[name: 'master']],
+                  userRemoteConfigs: [[
+                    url: 'git@github.com:mathild3r/java-goof.git',
+                    credentialsId: ${GITHUB_TOKEN},
+                  ]]
+                ])
+              }
+            }
+
+      stage('Git Clone') {
+              steps {
+                git url: 'https://github.com/mathild3r/java-goof.git'
+                sh 'ls -la'
+            }
+        }
+      stage('installation') {
+              steps {
+                sh 'sudo npm install -g npm'
+                sh 'sudo npm install -g snyk'
+                sh 'sudo npm i -g snyk-prevent-gh-commit-status'
+              }
+            }
+
+      stage('Snyk Test using Snyk CLI') {
+              steps {
+                sh './snyk test --all-projects --json-file-output=snykTestResults.json || true'
+                sh 'npx snyk-prevent-gh-commit-status ./snykTestResults.json ${GITHUB_TOKEN} ${JOB_NAME} ${GIT_REPO_NAME} ${GIT_COMMIT} ${CHANGE_ID} ${JOB_URL}'
+            }
+        }
+    }
+}
