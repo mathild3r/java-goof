@@ -45,11 +45,11 @@ pipeline {
                 echo 'Running Snyk test'
                 sh 'snyk test --all-projects --json-file-output=snykTestResults.json || true'
                 sh 'echo $GITHUB_TOKEN'
-                sh 'echo $env.JOB_NAME'
-                sh 'echo $env.GIT_REPO_NAME'
-                sh 'echo $env.GIT_COMMIT'
-                sh 'echo $env.CHANGE_ID'
-                sh 'echo $env.JOB_URL'
+                sh 'echo $JOB_NAME'
+                sh 'echo $GIT_REPO_NAME'
+                sh 'echo $GIT_COMMIT'
+                sh 'echo $CHANGE_ID'
+                sh 'echo $JOB_URL'
                 sh 'npx snyk-prevent-gh-commit-status ./snykTestResults.json $GITHUB_TOKEN $JOB_NAME $GIT_REPO_NAME $GIT_COMMIT $CHANGE_ID $JOB_URL'
             }
         }
