@@ -15,7 +15,6 @@ pipeline {
     }
 
     stages {
-
       stage('Initialize & Cleanup Workspace') {
                   steps {
                     echo 'Initialize & Cleanup Workspace'
