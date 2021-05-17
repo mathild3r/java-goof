@@ -28,18 +28,7 @@ pipeline {
                   }
               }
 
-        stage('Checkout SCM') {
-              steps {
-                checkout([
-                  $class: 'GitSCM',
-                  branches: [[name: 'test'], [name: 'master']],
-                  userRemoteConfigs: [[
-                    url: 'git@github.com:mathild3r/java-goof.git',
-                    credentialsId: env.GITHUB_TOKEN,
-                  ]]
-                ])
-              }
-            }
+        
         
         stage('installations') {
             steps {
@@ -59,6 +48,7 @@ pipeline {
                 sh 'echo $GIT_COMMIT'
                 sh 'echo $CHANGE_ID'
                 sh 'echo $JOB_URL'
+                sh 'echo $ghprbPullId'
                 sh 'npx snyk-prevent-gh-commit-status ./snykTestResults.json $GITHUB_TOKEN $OWNER_NAME $GIT_REPO_NAME $GIT_COMMIT $CHANGE_ID'
             }
         }
