@@ -12,7 +12,8 @@ pipeline {
     environment {
         SNYK_TOKEN = credentials('snyk-api-token')
         GITHUB_TOKEN = credentials('GITHUB_TOKEN')
-        GIT_REPO_NAME = 'JAVA_GOOF'
+        GIT_REPO_NAME = 'java_goof'
+        OWNER_NAME = 'mathild3r'
     }
 
     stages {
@@ -31,7 +32,7 @@ pipeline {
               steps {
                 checkout([
                   $class: 'GitSCM',
-                  branches: [[name: 'test']],
+                  branches: [[name: 'test'], [name: 'master']],
                   userRemoteConfigs: [[
                     url: 'git@github.com:mathild3r/java-goof.git',
                     credentialsId: env.GITHUB_TOKEN,
@@ -60,13 +61,12 @@ pipeline {
                 sh 'snyk test --all-projects --json-file-output=snykTestResults.json || true'
                 sh 'echo $GIT_URL'
                 sh 'echo $GIT_REPO_NAME'
-                sh 'echo $GIT_URL'
-                sh 'echo $JOB_NAME'
+                sh 'echo $OWNER_NAME'
                 sh 'echo $GIT_REPO_NAME'
                 sh 'echo $GIT_COMMIT'
                 sh 'echo $CHANGE_ID'
                 sh 'echo $JOB_URL'
-                sh 'npx snyk-prevent-gh-commit-status ./snykTestResults.json $GITHUB_TOKEN $JOB_NAME $GIT_REPO_NAME $GIT_COMMIT $CHANGE_ID $JOB_URL'
+                sh 'npx snyk-prevent-gh-commit-status ./snykTestResults.json $GITHUB_TOKEN $OWNER_NAME $GIT_REPO_NAME $GIT_COMMIT $CHANGE_ID'
             }
         }
     }
