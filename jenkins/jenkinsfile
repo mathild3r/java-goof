@@ -25,19 +25,6 @@ pipeline {
                     sh 'ls -la'
                   }
               }
-              
-       stage('Checkout SCM') {
-              steps {
-                checkout([
-                  $class: 'GitSCM',
-                  branches: [[name: 'test']],
-                  userRemoteConfigs: [[
-                    url: 'git@github.com:mathild3r/java-goof.git',
-                    credentialsId: $GITHUB_TOKEN,
-                  ]]
-                ])
-              }
-            }
 
         stage('Checkout SCM') {
               steps {
@@ -70,7 +57,9 @@ pipeline {
             steps {
                 echo 'Running Snyk test'
                 sh 'snyk test --all-projects --json-file-output=snykTestResults.json || true'
-                sh 'echo $GITHUB_TOKEN'
+                sh 'GIT_REPO_NAME = $GIT_URL.replaceFirst(/^.*\/([^\/]+?).git$/, '$1')'
+                sh 'echo $GIT_REPO_NAME'
+                sh 'echo $GIT_URL'
                 sh 'echo $JOB_NAME'
                 sh 'echo $GIT_REPO_NAME'
                 sh 'echo $GIT_COMMIT'
