@@ -25,6 +25,19 @@ pipeline {
                     sh 'ls -la'
                   }
               }
+              
+       stage('Checkout SCM') {
+              steps {
+                checkout([
+                  $class: 'GitSCM',
+                  branches: [[name: 'test']],
+                  userRemoteConfigs: [[
+                    url: 'git@github.com:mathild3r/java-goof.git',
+                    credentialsId: $GITHUB_TOKEN,
+                  ]]
+                ])
+              }
+            }
 
         stage('Checkout SCM') {
               steps {
