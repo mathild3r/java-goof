@@ -53,6 +53,7 @@ pipeline {
                 sh 'echo $GIT_COMMIT'
                 sh 'echo $JOB_URL'
                 sh 'echo $GITHUB_PR_NUMBER'
+                sh 'echo GITHUB_PR_SOURCE_REPO_OWNER'
                 sh 'npx snyk-prevent-gh-commit-status ./snykTestResults.json $GITHUB_TOKEN $OWNER_NAME $GIT_REPO_NAME $GIT_COMMIT $CHANGE_ID'
             }
         }
