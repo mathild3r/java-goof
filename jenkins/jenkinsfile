@@ -33,7 +33,7 @@ pipeline {
                   branches: [[name: 'test']],
                   userRemoteConfigs: [[
                     url: 'git@github.com:mathild3r/java-goof.git',
-                    credentialsId: $GITHUB__TOKEN,
+                    credentialsId: $GITHUB_TOKEN,
                   ]]
                 ])
               }
