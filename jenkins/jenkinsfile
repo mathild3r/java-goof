@@ -51,7 +51,6 @@ pipeline {
                 sh 'echo $OWNER_NAME'
                 sh 'echo $GIT_REPO_NAME'
                 sh 'echo $GIT_COMMIT'
-                sh 'echo $CHANGE_ID'
                 sh 'echo $JOB_URL'
                 sh 'echo $GITHUB_PR_NUMBER'
                 sh 'npx snyk-prevent-gh-commit-status ./snykTestResults.json $GITHUB_TOKEN $OWNER_NAME $GIT_REPO_NAME $GIT_COMMIT $CHANGE_ID'
