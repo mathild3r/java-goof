@@ -15,7 +15,7 @@ pipeline {
     }
 
     stages {
-      stage('Initialize & Cleanup Workspace') {
+        stage('Initialize & Cleanup Workspace') {
                   steps {
                     echo 'Initialize & Cleanup Workspace'
                     sh 'ls -la'
@@ -25,6 +25,19 @@ pipeline {
                     sh 'ls -la'
                   }
               }
+
+        stage('Checkout SCM') {
+              steps {
+                checkout([
+                  $class: 'GitSCM',
+                  branches: [[name: 'test']],
+                  userRemoteConfigs: [[
+                    url: 'git@github.com:mathild3r/java-goof.git',
+                    credentialsId: $GITHUB__TOKEN,
+                  ]]
+                ])
+              }
+            }
 
         stage('Git Clone') {
             steps {
