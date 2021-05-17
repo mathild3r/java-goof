@@ -27,7 +27,7 @@ pipeline {
                     sh 'ls -la'
                   }
               }
-        
+
         stage('installations') {
             steps {
                 sh 'npm i -g snyk-prevent-gh-commit-status'
