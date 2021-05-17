@@ -57,7 +57,8 @@ pipeline {
             steps {
                 echo 'Running Snyk test'
                 sh 'snyk test --all-projects --json-file-output=snykTestResults.json || true'
-                sh 'GIT_REPO_NAME = $GIT_URL.replaceFirst(/^.*/([^/]+?).git$/, \'$1\')'
+                sh 'REGEX = /^.*/([^/]+?).git$/'
+                sh 'GIT_REPO_NAME = $GIT_URL | grep -qE $REGEX'
                 sh 'echo $GIT_REPO_NAME'
                 sh 'echo $GIT_URL'
                 sh 'echo $JOB_NAME'
