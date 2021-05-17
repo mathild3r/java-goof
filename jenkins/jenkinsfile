@@ -44,6 +44,7 @@ pipeline {
                 sh 'echo $OWNER_NAME'
                 sh 'echo $GIT_REPO_NAME'
                 sh 'echo $GIT_COMMIT'
+                
                 sh 'echo $CHANGE_ID'
                 sh 'echo $JOB_URL'
                 sh 'echo $ghprbPullId'
