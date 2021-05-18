@@ -48,7 +48,7 @@ pipeline {
                 sh 'echo $GITHUB_PR_NUMBER'
                 sh 'echo $GITHUB_PR_SOURCE_REPO_OWNER'
                 sh 'echo $GITHUB_PR_URL'
-                sh '-----'
+                sh 'echo -----'
                 sh 'npx snyk-prevent-gh-commit-status ./snykTestResults.json $GITHUB_TOKEN $OWNER_NAME $GIT_REPO_NAME $GIT_COMMIT $GITHUB_PR_URL'
             }
         }
