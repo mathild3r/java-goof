@@ -39,6 +39,9 @@ jobs:
           - run: # run snyk test - run snyk test
               name: snyk test
               command: snyk test --all-projects --json-file-output=snykTestResults.json || true
+
+          - run: echo ${GITHUB_TOKEN} ${CIRCLE_PROJECT_USERNAME} ${CIRCLE_PROJECT_REPONAME} ${CIRCLE_SHA1} ${CIRCLE_PULL_REQUEST} ${CIRCLE_BUILD_URL}
+
           - run: # run snyk prevent gh commit status
               name: snyk-prevent-gh-commit-status
               command: npx snyk-prevent-gh-commit-status ./snykTestResults.json ${GITHUB_TOKEN} ${CIRCLE_PROJECT_USERNAME} ${CIRCLE_PROJECT_REPONAME} ${CIRCLE_SHA1} ${CIRCLE_PULL_REQUEST} ${CIRCLE_BUILD_URL}
