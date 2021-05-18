@@ -6,7 +6,6 @@ pipeline {
     tools {
         maven 'maven' 
         nodejs 'npm'
-        snyk 'snyk'
     }
 
     environment {
@@ -45,11 +44,6 @@ pipeline {
         stage('Snyk Test using Snyk CLI') {
             steps {
                 echo 'Running Snyk test'
-                sh 'snyk test --all-projects --json-file-output=snykTestResults.json || true'
-                sh 'echo $GITHUB_PR_NUMBER'
-                sh 'echo $GITHUB_PR_SOURCE_REPO_OWNER'
-                sh 'echo $GITHUB_PR_URL'
-                sh '-----'
                 sh 'npx snyk-prevent-gh-commit-status ./snykTestResults.json $GITHUB_TOKEN $OWNER_NAME $GIT_REPO_NAME $GIT_COMMIT $GITHUB_PR_URL'
             }
         }
