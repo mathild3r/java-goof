@@ -12,7 +12,6 @@ pipeline {
         SNYK_TOKEN = credentials('snyk-api-token')
         GITHUB_TOKEN = credentials('GITHUB_TOKEN')
         GIT_REPO_NAME = 'java_goof'
-        OWNER_NAME = 'mathild3r'
     }
 
     stages {
@@ -44,7 +43,7 @@ pipeline {
         stage('Snyk Test using Snyk CLI') {
             steps {
                 echo 'Running Snyk test'
-                sh 'npx snyk-prevent-gh-commit-status ./snykTestResults.json $GITHUB_TOKEN $OWNER_NAME $GIT_REPO_NAME $GIT_COMMIT $GITHUB_PR_URL'
+                sh 'npx snyk-prevent-gh-commit-status ./snykTestResults.json $GITHUB_TOKEN $CHANGE_AUTHOR $GIT_REPO_NAME $GIT_COMMIT $CHANGE_ID'
             }
         }
     }
